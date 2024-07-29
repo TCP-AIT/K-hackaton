@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // color theme
-class TeamColors {
+class AppColors {
   static const Color mainColor = Color(0xff44B678);
   static const Color accentColor = Color(0xff05F7C0);
   static const Color black = Color(0xff000000);
@@ -15,7 +15,7 @@ class TextBlack extends StatelessWidget {
   final double size;
   final Color color;
 
-  const TextBlack({super.key, required this.string, required this.size, this.color = TeamColors.black});
+  const TextBlack({super.key, required this.string, required this.size, this.color = AppColors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,9 @@ class TextBlack extends StatelessWidget {
 class TextMedium extends StatelessWidget {
   final String string;
   final double size;
+  final Color color;
 
-  const TextMedium({super.key, required this.string, required this.size});
+  const TextMedium({super.key, required this.string, required this.size, this.color = AppColors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +42,18 @@ class TextMedium extends StatelessWidget {
       string,
       style: TextStyle(
           fontSize: size,
+          color: color,
           fontFamily:'NotoSans',
-          fontWeight: FontWeight.w500),
+          fontWeight: FontWeight.w900),
     );
   }
 }
 class TextRegular extends StatelessWidget {
   final String string;
   final double size;
+  final Color color;
 
-  const TextRegular({super.key, required this.string, required this.size});
+  const TextRegular({super.key, required this.string, required this.size, this.color = AppColors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +61,15 @@ class TextRegular extends StatelessWidget {
       string,
       style: TextStyle(
           fontSize: size,
+          color: color,
           fontFamily:'NotoSans',
-          fontWeight: FontWeight.w400),
+          fontWeight: FontWeight.w900),
     );
   }
 }
 
 //icons
-class TeamIcons {
+class AppIcons {
   static String get safeDrivingOff => 'lib/assets/icons/safe_driving_black_32.png';
   static String get safeDrivingOn => 'lib/assets/icons/safe_driving_accent_32.png';
   static String get alcoholTimerPageOff => 'lib/assets/icons/alcohol_timer_black_24.png';
