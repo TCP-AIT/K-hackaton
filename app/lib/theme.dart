@@ -1,57 +1,82 @@
 import 'package:flutter/material.dart';
 
-
-class ColorStyles {
-  static const Color sblue = Color(0xff4169E1);
-  static const Color sblack = Color(0xff000000);
-  static const Color sgrey = Color(0xffd9d9d9);
-  static const Color swhite = Color(0xffffffff);
-  static const Color sred = Color(0xffF45B69);
+// color theme
+class AppColors {
+  static const Color mainColor = Color(0xff44B678);
+  static const Color accentColor = Color(0xff05F7C0);
+  static const Color black = Color(0xff000000);
+  static const Color white = Color(0xffffffff);
+  static const Color grey = Color(0xffD9D9D9);
 }
 
-// w600
-// 24, 32, 48
-Widget text24w6(String string) {
-  return Container(
-      margin: EdgeInsets.only(top: 4, bottom: 4),
-      child: Text(
-        string,
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, fontFamily: "Noto_Serif"),
-        textAlign: TextAlign.center,
-      ));
-}
+// font theme
+class TextBlack extends StatelessWidget {
+  final String string;
+  final double size;
+  final Color color;
 
-Widget text32w6(String string) {
-  return Container(
-    margin: EdgeInsets.only(top: 4, bottom: 4),
-    child: Text(
+  const TextBlack({super.key, required this.string, required this.size, this.color = AppColors.black});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
       string,
-      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600, fontFamily: "Noto_Serif"),
-      textAlign: TextAlign.center,
-    ),
-  );
+      style: TextStyle(
+          fontSize: size,
+          color: color,
+          fontFamily:'NotoSans',
+          fontWeight: FontWeight.w900),
+    );
+  }
+}
+class TextMedium extends StatelessWidget {
+  final String string;
+  final double size;
+  final Color color;
+
+  const TextMedium({super.key, required this.string, required this.size, this.color = AppColors.black});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      string,
+      style: TextStyle(
+          fontSize: size,
+          color: color,
+          fontFamily:'NotoSans',
+          fontWeight: FontWeight.w900),
+    );
+  }
+}
+class TextRegular extends StatelessWidget {
+  final String string;
+  final double size;
+  final Color color;
+
+  const TextRegular({super.key, required this.string, required this.size, this.color = AppColors.black});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      string,
+      style: TextStyle(
+          fontSize: size,
+          color: color,
+          fontFamily:'NotoSans',
+          fontWeight: FontWeight.w900),
+    );
+  }
 }
 
-Widget text48w6(String string) {
-  return Container(
-    margin: EdgeInsets.only(top: 4, bottom: 4),
-    child: Text(
-      string,
-      style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w600, fontFamily: "Noto_Serif"),
-      textAlign: TextAlign.center,
-    ),
-  );
-}
+//icons
+class AppIcons {
+  static String get safeDrivingOff => 'lib/assets/icons/safe_driving_black_32.png';
+  static String get safeDrivingOn => 'lib/assets/icons/safe_driving_accent_32.png';
+  static String get alcoholTimerPageOff => 'lib/assets/icons/alcohol_timer_black_24.png';
+  static String get alcoholTimerPageOn => 'lib/assets/icons/alcohol_timer_accent_24.png';
+  static String get navigationPageOff => 'lib/assets/icons/navigation_black_24.png';
+  static String get navigationPageOn => 'lib/assets/icons/navigation_accent_24.png';
+  static String get settingPageOff => 'lib/assets/icons/settings_black_24.png';
+  static String get settingPageOn => 'lib/assets/icons/settings_accent_24.png';
 
-// w400
-// 16
-Widget text16w4(String string) {
-  return Container(
-    margin: EdgeInsets.only(top: 4, bottom: 4),
-    child: Text(
-      string,
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: "Noto_Serif"),
-      textAlign: TextAlign.center,
-    ),
-  );
 }
