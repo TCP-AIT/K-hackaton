@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   final List<Widget> _pages = [
     AlcoholTimerPage(),
     NavigationPage(),
-    SelfCheckPage(),
+    //SelfCheckPage(), //제거
     SettingPage()
   ];
 
