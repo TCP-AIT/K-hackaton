@@ -44,7 +44,7 @@ class TextMedium extends StatelessWidget {
           fontSize: size,
           color: color,
           fontFamily:'NotoSans',
-          fontWeight: FontWeight.w900),
+          fontWeight: FontWeight.w500),
     );
   }
 }
@@ -63,7 +63,7 @@ class TextRegular extends StatelessWidget {
           fontSize: size,
           color: color,
           fontFamily:'NotoSans',
-          fontWeight: FontWeight.w900),
+          fontWeight: FontWeight.w400),
     );
   }
 }
