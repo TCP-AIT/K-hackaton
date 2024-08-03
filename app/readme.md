@@ -32,9 +32,11 @@
 - alcohol_timer_page 중 alcohol_timer_form 부분을 99% 완성함.
 - 기존 figma 디자인 그대로 가되 마신 양 부분을 병, 잔 등의 단위 말고 ml 단위로 직접 입력할 수 있게 수정함. -> cal_alcohol 알코올 계산 부분 코드의 편의성 + 만일 사용자가 직접 ml를 입력하고 싶을 때 form 부분 ui가 바뀌어야 하기에 (ml로 입력하고 싶다, 라는 걸 입력 받기도 현 ui에서는 애매해짐) 그냥 사용자가 마신 양을 ml 단위로 입력하도록 바꿈.
 - 추후 추가 보완할 사항은 아래와 같음.
+  
     **alcohol_timer_form**
-    - [ ] _drinks 선택에 따라 _defaultAlcohol이 initial value에 보이게
-    - [ ] errorMsg 띄우는 건 버튼 눌렀을 때에만 보이게
+    -  _drinks 선택에 따라 _defaultAlcohol이 initial value에 보이게
+    -  errorMsg 띄우는 건 버튼 눌렀을 때에만 보이게
+
     **alcohol_timer_form_field**
-    - [ ] local save 기능을 활용하여 성별과 몸무게는 기존에 저장된 값으로 initial value가 보이게
-    - [ ] FormFieldDropDown text vertical center
+    -  local save 기능을 활용하여 성별과 몸무게는 기존에 저장된 값으로 initial value가 보이게
+    -  FormFieldDropDown text vertical center
