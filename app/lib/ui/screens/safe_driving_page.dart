@@ -6,7 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'self_check_page.dart';
-import 'package:app/theme.dart'; //테스트용
+import 'package:app/theme.dart';
 
 class SafeDrivingPage extends StatefulWidget {
   final CameraDescription camera;
