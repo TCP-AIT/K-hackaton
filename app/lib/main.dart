@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import 'package:ice_d/ui/screens/alcohol_timer_page.dart';
 import 'package:ice_d/ui/screens/navigation_page.dart';
-import 'package:ice_d/ui/screens/self_check_page.dart';
+import 'package:ice_d/ui/screens/safe_driving_page.dart';
 import 'package:ice_d/ui/screens/setting_page.dart';
 import 'package:ice_d/ui/widgets/bar_widgets.dart';
 
+// 카메라 리스트 전역 변수 선언
+List<CameraDescription> cameras = [];
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // 사용 가능한 카메라 리스트 초기화
+  cameras = await availableCameras();
   runApp(const MyApp());
 }
 
@@ -20,14 +26,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    AlcoholTimerPage(),
-    NavigationPage(),
-    //SelfCheckPage(), //제거
-    SettingPage()
-  ];
+  late final List<Widget> _pages;
 
-  void _onTap(int index){
+  @override
+  void initState() {
+    super.initState();
+    // 페이지 리스트 초기화, SafeDrivingPage에 카메라 전달
+    _pages = [
+      AlcoholTimerPage(),
+      NavigationPage(),
+      SafeDrivingPage(camera: cameras.isNotEmpty ? cameras.first : null),
+      SettingPage(),
+    ];
+  }
+
+  void _onTap(int index) {
     setState(() {
       _currentIndex = index;
     });
@@ -38,7 +51,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'NotoSans'
+        fontFamily: 'NotoSans',
       ),
       home: Scaffold(
         appBar: TopBar(),
@@ -49,11 +62,8 @@ class _MyAppState extends State<MyApp> {
         bottomNavigationBar: BottomBar(
           currentIndex: _currentIndex,
           onTap: _onTap,
-        )
+        ),
       ),
     );
   }
 }
-
-
-

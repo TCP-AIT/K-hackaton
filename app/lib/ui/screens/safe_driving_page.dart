@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'self_check_page.dart';
 import 'package:app/theme.dart';
 
 class SafeDrivingPage extends StatefulWidget {
@@ -26,10 +27,11 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
   @override
   void initState() {
     super.initState();
+    _showSelfCheckDialog();
     _controller = CameraController(
-      fps: 30,
       widget.camera,
       ResolutionPreset.medium,
+      enableAudio: false,
     );
     _initializeControllerFuture = _controller.initialize();
     _channel = IOWebSocketChannel.connect('ws://3fb9-203-246-85-181.ngrok-free.app/video_feed');
@@ -47,8 +49,38 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
     super.dispose();
   }
 
+  void _showSelfCheckDialog() {
+    Future.delayed(Duration.zero, () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('운전 전 자가진단을 하시겠습니까?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SelfCheckPage()),
+                  );
+                },
+                child: Text('예'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('아니요'),
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
   void _startSending() {
-    _timer = Timer.periodic(Duration(milliseconds: 1), (timer) async {
+    _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) async {
       if (_isSending) {
         try {
           final image = await _controller.takePicture();
@@ -86,7 +118,6 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
     });
   }
 
-  //TODO 여기 내일 수정
   void _handleMessage(message) {
     try {
       final data = jsonDecode(message);
@@ -127,14 +158,28 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
             future: _initializeControllerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_controller);
+                return Stack(
+                  children: [
+                    CameraPreview(_controller),
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      width: 150,
+                      height: 200,
+                      child: Container(
+                        color: Colors.black54,
+                        child: CameraPreview(_controller),
+                      ),
+                    ),
+                  ],
+                );
               } else {
                 return const Center(child: CircularProgressIndicator());
               }
             },
           ),
           text16w4(
-              "please put your phone to spable place and make sure your face is on the camera screen.\n\nif all is ok,you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nhave a good drive! ;)"),
+              "please put your phone to a stable place and make sure your face is on the camera screen.\n\nIf all is okay, you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nHave a good drive! ;)"),
         ],
       ),
       floatingActionButton: FloatingActionButton(
