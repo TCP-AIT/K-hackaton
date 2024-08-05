@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:ice_d/theme.dart';
 
 class TopBar extends StatefulWidget implements PreferredSizeWidget{
@@ -18,7 +17,6 @@ class TopBarState extends State<TopBar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.white,
-      foregroundColor: AppColors.accentColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

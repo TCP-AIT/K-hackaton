@@ -6,7 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'self_check_page.dart';
-import 'package:app/theme.dart';
+import 'package:ice_d/theme.dart';
 
 class SafeDrivingPage extends StatefulWidget {
   final CameraDescription camera;
@@ -152,35 +152,37 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          FutureBuilder<void>(
-            future: _initializeControllerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Stack(
-                  children: [
-                    CameraPreview(_controller),
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      width: 150,
-                      height: 200,
-                      child: Container(
-                        color: Colors.black54,
-                        child: CameraPreview(_controller),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Stack(
+                    children: [
+                      CameraPreview(_controller),
+                      Positioned(
+                        bottom: 10,
+                        right: 10,
+                        width: 150,
+                        height: 200,
+                        child: Container(
+                          color: Colors.black54,
+                          child: CameraPreview(_controller),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          text16w4(
-              "please put your phone to a stable place and make sure your face is on the camera screen.\n\nIf all is okay, you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nHave a good drive! ;)"),
-        ],
+                    ],
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            TextMedium(size: 16,
+                string: "please put your phone to a stable place and make sure your face is on the camera screen.\n\nIf all is okay, you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nHave a good drive! ;)"),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _toggleSending,

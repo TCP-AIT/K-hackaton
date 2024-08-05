@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'app_state.dart';
 import 'theme.dart';
@@ -36,7 +35,6 @@ class TimerProvider with ChangeNotifier {
     });
   }
 
-
   void stopTimer() {
     _timer?.cancel();
   }
@@ -61,13 +59,13 @@ class TimerProvider with ChangeNotifier {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              content: text16w4('Time is ended. Now you can drive again!'),
+              content: TextMedium(string: 'Time is ended. Now you can drive again!', size: 16),
               actions: <Widget>[
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: text16w4('OK'))
+                    child: TextMedium(string: 'OK', size: 16,))
               ],
             );
           });

@@ -76,8 +76,15 @@ class FormFieldText extends StatefulWidget {
   late double value;
   final String label;
   final Function onErrorChanged;
+  final TextEditingController textController;
 
-  FormFieldText({super.key, required this.value, required this.label, required this.onErrorChanged});
+  FormFieldText({
+    super.key,
+    required this.value,
+    required this.label,
+    required this.onErrorChanged,
+    required this.textController
+  });
 
   @override
   State<FormFieldText> createState() => _FormFieldTextState();
@@ -91,6 +98,9 @@ class _FormFieldTextState extends State<FormFieldText> {
 
     return FormField<double>(
       initialValue: widget.value,
+      onSaved: (val){
+        setState((){widget.value = val!;});
+      },
       validator: (value) {
         if (value == null || value <= 0) {
           widget.onErrorChanged('${widget.label}을(를) 알맞게 입력하세요');
@@ -114,6 +124,7 @@ class _FormFieldTextState extends State<FormFieldText> {
               ),
               alignment: Alignment.center,
               child: TextField(
+                controller: widget.textController,
                 decoration: const InputDecoration(border: InputBorder.none),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -161,6 +172,9 @@ class FormFieldDropdown extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: FormField<String>(
+        // onSaved: (val){
+        //   setState((){widget.value = val!;});
+        // },
         //autovalidateMode: AutovalidateMode.onUserInteraction,
         builder: (FormFieldState<String> state) {
           return Column(

@@ -10,10 +10,10 @@ class AlcoholTimerForm extends StatefulWidget {
   AlcoholTimerForm({super.key, required isBtnActivated});
 
   @override
-  State<AlcoholTimerForm> createState() => _AlcoholTimerFormState();
+  State<AlcoholTimerForm> createState() => AlcoholTimerFormState();
 }
 
-class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
+class AlcoholTimerFormState extends State<AlcoholTimerForm> {
   String _sex = '남성';
   double _sexWeight = 0;
   double _weight = 0;
@@ -22,6 +22,10 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
   double _drinkAmount = 0;
   String _time = '90분 내';
   double _timeNum = 0;
+
+  final _weightController = TextEditingController();
+  final _drinkAmountController = TextEditingController();
+  final _alcoholController = TextEditingController();
 
 
   final List<String> _drinks = ['소주', '맥주', '와인', '위스키'];
@@ -32,7 +36,12 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
   final List<String> _labels = ['성별', '몸무게', '주류 종류', '마신 양', '음주한 시간'];
   final List<String> _errorMsgs = ['','','','',''];
 
-  double _calAlcohol(){
+  double calAlcohol(){
+
+    double _weight = double.tryParse(_weightController.text) ?? 0;
+    double _drinkAmount = double.tryParse(_drinkAmountController.text) ?? 0;
+    double _alcohol = double.tryParse(_alcoholController.text) ?? 0;
+
     if(_sex == '남성'){
       _sexWeight = 0.86;
     } else{
@@ -47,7 +56,16 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
 
     double bac = ((_drinkAmount*_alcohol*0.7894*0.7)/(_weight*_sexWeight)-(0.015*_timeNum));
 
-    return double.parse(bac.toStringAsFixed(3));
+    //return double.parse(bac.toStringAsFixed(3));
+    return bac;
+  }
+
+  @override
+  void dispose() {
+    _weightController.dispose();
+    _drinkAmountController.dispose();
+    _alcoholController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,7 +74,14 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
     final List<Widget> renderForm = [
       FormFieldToggle(sex: _sex, onErrorChanged: (String msg){setState((){_errorMsgs[0] = msg;});}),
       Row(children: [
-        FormFieldText(value: _weight, label: '몸무게', onErrorChanged: (String msg){setState((){_errorMsgs[1] = msg;});}),
+        FormFieldText(
+            value: _weight,
+            label: '몸무게',
+            onErrorChanged: (String msg) {
+              setState((){_errorMsgs[1] = msg;});
+            },
+            textController: _weightController,
+        ),
         const SizedBox(width: 4.0,),
         const TextMedium(string: 'kg', size: 16)],
       ),
@@ -69,16 +94,31 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
                 setState((){
                   _drink = newValue!;
                 })
-                ;}),
+              ;}
+          ),
           SizedBox(width: deviceWidth*0.03,),
-          FormFieldText(value: _alcohol, label: '알코올 도수', onErrorChanged: (String msg){setState((){_errorMsgs[2] = msg;});}),
+          FormFieldText(
+            value: _alcohol,
+            label: '알코올 도수',
+            onErrorChanged: (String msg){
+              setState((){_errorMsgs[2] = msg;});
+            },
+            textController: _alcoholController,
+          ),
           const SizedBox(width: 4.0,),
           const TextMedium(string: '%', size: 16,)
         ],
       ),
       Row(
         children: [
-          FormFieldText(value: _drinkAmount, label: '마신 양', onErrorChanged: (String msg){setState((){_errorMsgs[3] = msg;});}),
+          FormFieldText(
+            value: _drinkAmount,
+            label: '마신 양',
+            onErrorChanged: (String msg){
+              setState((){_errorMsgs[3] = msg;});
+            },
+            textController: _drinkAmountController,
+          ),
           SizedBox(width: deviceWidth*0.03,),
           const TextMedium(string: 'ml', size: 16,)
         ],
@@ -113,7 +153,8 @@ class _AlcoholTimerFormState extends State<AlcoholTimerForm> {
                     ))
               ],
             ),
-          )
+          ),
+
       ],
     );
   }

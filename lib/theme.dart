@@ -57,6 +57,7 @@ class TextRegular extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Text(
       string,
       style: TextStyle(
@@ -78,5 +79,5 @@ class AppIcons {
   static String get navigationPageOn => 'lib/assets/icons/navigation_accent_24.png';
   static String get settingPageOff => 'lib/assets/icons/settings_black_24.png';
   static String get settingPageOn => 'lib/assets/icons/settings_accent_24.png';
-
 }
+
