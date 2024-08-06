@@ -1,13 +1,14 @@
-package com.example.your_app
+
+package com.example.khackaton
 
 import android.app.PictureInPictureParams
 import android.os.Build
 import android.util.Rational
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.example.pip"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
