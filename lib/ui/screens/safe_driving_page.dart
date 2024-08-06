@@ -7,9 +7,10 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'self_check_page.dart';
 import 'package:ice_d/theme.dart';
+import 'package:flutter/services.dart';
 
 class SafeDrivingPage extends StatefulWidget {
-  final CameraDescription camera;
+  final CameraDescription? camera;
 
   const SafeDrivingPage({super.key, required this.camera});
 
@@ -21,21 +22,23 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isSending = false;
+  bool _isPipActive = false;
   Timer? _timer;
   late WebSocketChannel _channel;
 
   @override
   void initState() {
     super.initState();
-    _showSelfCheckDialog();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.medium,
-      enableAudio: false,
-    );
-    _initializeControllerFuture = _controller.initialize();
+    if (widget.camera != null) {
+      _controller = CameraController(
+        widget.camera!,
+        ResolutionPreset.medium,
+        enableAudio: false,
+      );
+      _initializeControllerFuture = _controller.initialize();
+      _controller.setFlashMode(FlashMode.off);
+    }
     _channel = IOWebSocketChannel.connect('ws://3fb9-203-246-85-181.ngrok-free.app/video_feed');
-    _controller.setFlashMode(FlashMode.off);
     _channel.stream.listen((message) {
       _handleMessage(message);
     });
@@ -44,9 +47,17 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
+    if (widget.camera != null) {
+      _controller.dispose();
+    }
     _channel.sink.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _showSelfCheckDialog();
   }
 
   void _showSelfCheckDialog() {
@@ -81,7 +92,7 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
 
   void _startSending() {
     _timer = Timer.periodic(Duration(milliseconds: 1000), (timer) async {
-      if (_isSending) {
+      if (_isSending && !_isPipActive) {
         try {
           final image = await _controller.takePicture();
           await _sendImageToServer(image);
@@ -149,10 +160,21 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
     );
   }
 
+  void _enterPipMode() {
+    // Android 플랫폼에서 PiP 모드를 활성화합니다.
+    const platform = MethodChannel('com.example.pip');
+    platform.invokeMethod('enterPictureInPictureMode');
+    setState(() {
+      _isPipActive = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: widget.camera == null
+          ? Center(child: Text('No camera available'))
+          : SingleChildScrollView(
         child: Column(
           children: [
             FutureBuilder<void>(
@@ -161,16 +183,18 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Stack(
                     children: [
-                      CameraPreview(_controller),
+                      if (!_isPipActive) CameraPreview(_controller),
                       Positioned(
                         bottom: 10,
                         right: 10,
                         width: 150,
                         height: 200,
-                        child: Container(
+                        child: _isPipActive
+                            ? Container(
                           color: Colors.black54,
                           child: CameraPreview(_controller),
-                        ),
+                        )
+                            : Container(),
                       ),
                     ],
                   );
@@ -179,13 +203,23 @@ class _SafeDrivingPageState extends State<SafeDrivingPage> {
                 }
               },
             ),
-            TextMedium(size: 16,
-                string: "please put your phone to a stable place and make sure your face is on the camera screen.\n\nIf all is okay, you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nHave a good drive! ;)"),
+            TextMedium(
+              size: 16,
+              string:
+              "please put your phone to a stable place and make sure your face is on the camera screen.\n\nIf all is okay, you can use your navigation app!\n\nWe’ll call you when you look sleepy.\n\nHave a good drive! ;)",
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _toggleSending,
+      floatingActionButton: widget.camera == null
+          ? null
+          : FloatingActionButton(
+        onPressed: () {
+          _toggleSending();
+          if (!_isPipActive) {
+            _enterPipMode();
+          }
+        },
         child: Icon(_isSending ? Icons.stop : Icons.videocam),
       ),
     );
