@@ -157,9 +157,9 @@ class _SettingPageState extends State<SettingPage> {
                             onChanged: (value) {
                               setState(() {
                                 settingDriveSound = value;
+                                context.read<AppState>().setDriveSound(value);
                               });
                               _saveSetting('settingDriveSound', value);
-                              if (value) _playSound();
                             },
                             activeColor: AppColors.mainColor,
                           ),
@@ -198,33 +198,3 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 }
-
-// class SettingPage extends StatefulWidget {
-//   @override
-//   State<SettingPage> createState() => _SettingPageState();
-// }
-//
-// class _SettingPageState extends State<SettingPage> {
-//   void playSound(int soundNumber) {
-//     final player = AudioPlayer();
-//     player.play(DeviceFileSource('sounds/alarm_sound.mp3'));
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         body: SafeArea(
-//           child: Center(
-//             child: TextButton(
-//               onPressed: () {
-//                 playSound(1);
-//               },
-//               child: Text('Click Me'),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
