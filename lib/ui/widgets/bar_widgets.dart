@@ -70,6 +70,11 @@ class _BottomBarState extends State<BottomBar> {
               icon: Image.asset(AppIcons.settingPageOff),
               activeIcon: Image.asset(AppIcons.settingPageOn),
               label: '설정'
+          ),
+           BottomNavigationBarItem(
+              icon: Image.asset(AppIcons.settingPageOff),
+              activeIcon: Image.asset(AppIcons.settingPageOn),
+              label: '자가진단'
           )
         ],
       ),
