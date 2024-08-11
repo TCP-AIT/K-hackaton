@@ -1,7 +1,7 @@
-import 'package:app/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:app/theme.dart';
 import 'package:app/ui/widgets/custom_radio.dart';
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart'; // For sum extension on List
 
 class SelfCheckPage extends StatefulWidget {
   const SelfCheckPage({Key? key}) : super(key: key);
@@ -12,40 +12,38 @@ class SelfCheckPage extends StatefulWidget {
 
 class _SelfCheckPageState extends State<SelfCheckPage> {
   List<String> questions = [
-    "얼마나 자주 술을 마십니까?",
-    "술을 마시는 날은 보통 몇 잔을 마십니까?",
-    "한 번 술좌석에서 6잔 이상을 마시는 횟수는 몇 번입니까?",
-    "지난 1년간, 일단 술을 마시기 시작하여 자제가 안 된 적이 있습니까?",
-    "지난 1년간, 과음 후 다음날 아침 정신을 차리기 위해 해장술을 마신 적이 있습니까?",
-    "지난 1년간, 음주 후 술을 마신 것에 대해 후회한 적이 있습니까?",
-    "지난 1년간, 술이 깬 후에 취중의 일을 기억할 수 없었던 적이 있습니까?",
+    "술을 마신지 얼마나 지났습니까? (단위 : 3~4시간)",
+    "지난 24시간 동안 몇 시간 수면을 취했습니까? (단위 : 2시간)",
+    "수면의 질이 좋았습니까? 좋았다면 어느정도였습니까?",
+    "카페인 등 각성제를 섭취하지 않았습니까?",
+    "두통이나 어지러움이 없습니까?",
+    "감정 상태가 안정적입니까?",
+    "건강 상태가 양호합니까?",
   ];
 
-
-  List<int> selectedAnswerIndex = List<int>.filled(7, 0); // 초기 선택값
+  List<int> selectedAnswerIndex = List<int>.filled(16, 0); // Correct the length to match the number of questions
   List<Color> radioColors = <Color>[
-    Color(0xff4169E1),
-    Color(0xff6787E7),
-    Color(0xff8DA5ED),
-    Color(0xffB3B3B3),
-    Color(0xffF89DA5),
-    Color(0xffF67C87),
-    Color(0xffF45B69),
-
+    Color(0xffCCCCCC),
+    Color(0xffAAAAAA),
+    Color(0xff999999),
+    Color(0xff777777),
+    Color(0xff555555),
   ];
 
   Widget buildQuestion(int index, Size size) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        text16w4(
+        Text(
           questions[index],
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         ),
-        SizedBox(height: 16,),
+        SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            7,
-            (answerIndex) => Row(
+            5,
+                (answerIndex) => Row(
               children: [
                 CustomRadio(
                   value: answerIndex,
@@ -55,23 +53,19 @@ class _SelfCheckPageState extends State<SelfCheckPage> {
                       selectedAnswerIndex[index] = value!;
                     });
                   },
-                  kOuterRadius: (answerIndex - 3).abs().toDouble() * 2 + 7,
-                  kInnerRadius: (answerIndex - 3).abs().toDouble() * 2 + 4,
+                  kOuterRadius: (answerIndex + 5).abs().toDouble() + 7,
+                  kInnerRadius: (answerIndex + 5).abs().toDouble(),
                   color: radioColors[answerIndex],
                 ),
                 SizedBox(
-                  width: size.width*0.2/6,
+                  width: size.width * 0.25 / 6,
                 )
               ],
             ),
           ),
         ),
-        SizedBox(
-          height: 16,
-        ),
-        Divider(
-          color: ColorStyles.sgrey,
-        )
+        SizedBox(height: 16),
+        Divider(color: AppColors.grey),
       ],
     );
   }
@@ -86,30 +80,21 @@ class _SelfCheckPageState extends State<SelfCheckPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                height: size.width * 0.25,
-              ),
+              SizedBox(height: size.width * 0.25),
               Text(
-                "Can I Drive?",
+                "운전할 수 있나요?",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 10),
               Text(
-                "Test Yourself!",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    color: ColorStyles.sblue),
+                "해당할수록 큰 동그라미(오른쪽)를 선택하세요",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.black),
               ),
-              SizedBox(
-                height: size.width * 0.18,
-              ),
+              SizedBox(height: size.width * 0.18),
               Padding(
-                padding: EdgeInsets.only(
-                    left: size.width * 0.1, right: size.width * 0.1),
+                padding: EdgeInsets.only(left: size.width * 0.1, right: size.width * 0.1),
                 child: Column(
-                  children: List.generate(
-                      questions.length, (index) => buildQuestion(index, size)),
+                  children: List.generate(questions.length, (index) => buildQuestion(index, size)),
                 ),
               ),
               SizedBox(height: 20),
@@ -117,8 +102,6 @@ class _SelfCheckPageState extends State<SelfCheckPage> {
                 onPressed: () {
                   _testResult(context, selectedAnswerIndex);
                   print(selectedAnswerIndex);
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => ));
                 },
                 child: Text(
                   "Submit",
@@ -126,10 +109,10 @@ class _SelfCheckPageState extends State<SelfCheckPage> {
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: ColorStyles.sblue,
+                  backgroundColor: AppColors.black,
                 ),
               ),
-              SizedBox(height: 20,)
+              SizedBox(height: 20),
             ],
           ),
         ),
@@ -138,30 +121,26 @@ class _SelfCheckPageState extends State<SelfCheckPage> {
   }
 }
 
-// 7~49
-// 28 35 42 49
-// 정상 주의 경계 심각
-// normal warning alert serious
-
 void _testResult(BuildContext context, List<int> selectedAnswerIndex) {
-
-  int score = ((selectedAnswerIndex.sum)*100/49).round();
+  int score = ((selectedAnswerIndex.sum));
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: text24w6("Test Result"),
-            content: text16w4('your score is $score. if you higher than 50, you need to be careful.'),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: text16w4('OK'))
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("시험 결과", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
+          content: Text('$score.점. 20점보다 낮다면 조심해야 합니다.', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        );
+      },
+    );
   });
 }
