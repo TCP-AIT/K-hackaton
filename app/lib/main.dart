@@ -75,7 +75,8 @@ class PageViews extends StatelessWidget {
         children: [
           AlcoholTimerPage(), // 이거 AlcoholTimerPage로 해서 넣기. 현재느 -1만 들어가있음
           SafeDrivingPage(camera: camera,),
-          SelfCheckPage()
+          SelfCheckPage(),
+          SettingPage(),
         ],
       )
       ,
